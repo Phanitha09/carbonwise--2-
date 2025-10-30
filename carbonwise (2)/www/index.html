@@ -2,12 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarbonWise - Carbon Footprint Tracker</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CarbonWise - Track Your Carbon Footprint</title>
+    <link rel="stylesheet" href="css/style.css">
+    
 </head>
 <body>
+       <!-- FIX #3: Cordova Script with Proper Initialization -->
+<script src="cordova.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+    // Initialize app when Cordova or DOM is ready
+    console.log('Script loaded - checking environment');
+    
+    // Function to initialize the app
+    function initializeApp() {
+        console.log('Initializing CarbonWise app...');
+        if (typeof app !== 'undefined' && app && typeof app.init === 'function') {
+            try {
+                app.init();
+                console.log('App initialized successfully');
+            } catch (error) {
+                console.error('Error initializing app:', error);
+            }
+        } else {
+            console.error('App object or init method not found');
+        }
+    }
+    
+    // Check if running in Cordova environment
+    if (typeof cordova !== 'undefined') {
+        console.log('Cordova detected - waiting for deviceready');
+        document.addEventListener('deviceready', function() {
+            console.log('Cordova deviceready event fired');
+            initializeApp();
+        }, false);
+    } else {
+        console.log('Cordova not detected - using DOM ready');
+        // Running in browser or direct HTML file
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM Content Loaded - initializing app');
+                initializeApp();
+            });
+        } else {
+            // DOM is already loaded
+            console.log('DOM already loaded - initializing app immediately');
+            setTimeout(initializeApp, 100);
+        }
+    }
+ </script>
+ 
     <!-- Login Screen -->
     <div id="login-screen" class="screen active">
         <div class="auth-container">

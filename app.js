@@ -1444,3 +1444,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 500);
 });
+// Initialize app when ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded - Initializing App');
+    if (app && app.init) {
+        app.init();
+    } else {
+        console.error('App object not found!');
+    }
+});
+
+// Also initialize if document is already loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        if (app && app.init) {
+            app.init();
+        }
+    });
+} else {
+    // DOM already loaded
+    if (app && app.init) {
+        app.init();
+    }
+}
