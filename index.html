@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarbonWise - Carbon Footprint Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active">
+        <div class="auth-container">
+            <div class="logo-section">
+                <div class="logo">🌍</div>
+                <h1 class="app-name">CarbonWise</h1>
+                <p class="tagline">Track, Reduce, Thrive</p>
+            </div>
+            
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label">Username or Email</label>
+                    <input type="text" id="login-username" class="form-control" placeholder="Enter username or email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="Enter password" required>
+                </div>
+                
+                <div id="login-error" class="error-message"></div>
+                
+                <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="#" id="show-signup">Create Account</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Screen -->
+    <div id="signup-screen" class="screen">
+        <div class="auth-container">
+            <div class="logo-section">
+                <div class="logo">🌍</div>
+                <h1 class="app-name">CarbonWise</h1>
+                <p class="tagline">Join the Green Revolution</p>
+            </div>
+            
+            <form id="signup-form" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="signup-username" class="form-control" placeholder="Enter username" required>
+                    <small class="form-hint">Must contain at least one number or special character</small>
+                    <div id="username-error" class="validation-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="signup-email" class="form-control" placeholder="Enter email" required>
+                    <small class="form-hint">Must be a Gmail address (@gmail.com)</small>
+                    <div id="email-error" class="validation-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="signup-password" class="form-control" placeholder="Enter password" required>
+                    <small class="form-hint">Must contain uppercase, number (0-9), and special character</small>
+                    <div id="password-error" class="validation-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Re-enter Password</label>
+                    <input type="password" id="signup-confirm-password" class="form-control" placeholder="Confirm password" required>
+                    <div id="confirm-password-error" class="validation-error"></div>
+                </div>
+                
+                <div id="signup-error" class="error-message"></div>
+                
+                <button type="submit" class="btn btn--primary btn--full-width">Create Account</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Screen -->
+    <div id="onboarding-screen" class="screen">
+        <div class="onboarding-container">
+            <div class="onboarding-content">
+                <div class="onboarding-icon">🌱</div>
+                <h2>Welcome to CarbonWise!</h2>
+                <p>Let's start your journey to a greener lifestyle</p>
+                
+                <div class="onboarding-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <h3>Automated Tracking</h3>
+                        <p>Seamlessly track your carbon footprint</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎯</span>
+                        <h3>Personalized Insights</h3>
+                        <p>Get AI-powered recommendations</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🏆</span>
+                        <h3>Gamification</h3>
+                        <p>Earn badges and join challenges</p>
+                    </div>
+                </div>
+                
+                <button id="start-journey" class="btn btn--primary btn--full-width">Start My Journey</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container" class="screen">
+        <!-- Dashboard Screen -->
+        <div id="dashboard-view" class="view active">
+            <div class="app-header">
+                <div class="header-content">
+                    <h2>Dashboard</h2>
+                    <div class="user-avatar" id="user-avatar">👤</div>
+                </div>
+            </div>
+            
+            <div class="content-scroll">
+                <div class="content-padding">
+                    <!-- Carbon Overview Card -->
+                    <div class="card overview-card">
+                        <div class="card-header">
+                            <h3>Monthly Carbon Footprint</h3>
+                            <div class="period-selector">
+                                <button class="period-btn active" data-period="month">Month</button>
+                                <button class="period-btn" data-period="week">Week</button>
+                                <button class="period-btn" data-period="day">Day</button>
+                            </div>
+                        </div>
+                        <div class="footprint-value">
+                            <span class="value" id="total-footprint">15.2</span>
+                            <span class="unit">kg CO₂</span>
+                        </div>
+                        <div class="trend positive">
+                            <span class="trend-icon">↓</span>
+                            <span>12% lower than last month</span>
+                        </div>
+                    </div>
+
+                    <!-- Category Breakdown -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Breakdown by Category</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="category-chart"></canvas>
+                        </div>
+                        <div class="category-list" id="category-list"></div>
+                    </div>
+
+                    <!-- Progress Towards Goal -->
+                    <div class="card goal-card">
+                        <div class="card-header">
+                            <h3>Reduction Goal</h3>
+                            <span class="goal-percentage" id="goal-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="goal-progress"></div>
+                        </div>
+                        <p class="goal-text">Target: Reduce by <span id="goal-target">10</span>% this month</p>
+                    </div>
+
+                    <!-- Recent Activities -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Activities</h3>
+                            <a href="#" class="view-all-link">View All</a>
+                        </div>
+                        <div class="activity-list" id="recent-activities"></div>
+                    </div>
+
+                    <!-- Automated Data Tracking Card -->
+                    <div class="card automated-tracking-card" onclick="app.showAutomatedTracking()" style="cursor: pointer;">
+                        <div class="card-header">
+                            <h3>📍 GPS Tracking</h3>
+                        </div>
+                        <p class="tracking-description">Real-time location tracking with automatic transport mode detection</p>
+                        <div class="tracking-features">
+                            <div class="feature-tag">🚶 Walking</div>
+                            <div class="feature-tag">🚴 Cycling</div>
+                            <div class="feature-tag">🚗 Car</div>
+                            <div class="feature-tag">🚌 Transport</div>
+                        </div>
+                        <button class="btn btn--primary btn--full-width" style="margin-top: 16px;" onclick="event.stopPropagation(); app.showAutomatedTracking();">Start GPS Tracking</button>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="app.showTrackingModal('mobility')">
+                            <span class="action-icon">🚗</span>
+                            <span>Log Trip</span>
+                        </button>
+                        <button class="action-btn" onclick="app.showTrackingModal('food')">
+                            <span class="action-icon">🍽️</span>
+                            <span>Scan Receipt</span>
+                        </button>
+                        <button class="action-btn" onclick="app.showTrackingModal('energy')">
+                            <span class="action-icon">⚡</span>
+                            <span>Log Energy</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Track Screen -->
+        <div id="track-view" class="view">
+            <div class="app-header">
+                <div class="header-content">
+                    <h2>Track Activities</h2>
+                </div>
+            </div>
+            
+            <div class="content-scroll">
+                <div class="content-padding">
+                    <!-- GPS Tracking Card -->
+                    <div class="card" style="background: linear-gradient(135deg, var(--color-bg-1) 0%, var(--color-bg-8) 100%); border: 2px solid var(--color-primary); cursor: pointer;" onclick="app.showAutomatedTracking()">
+                        <div class="card-header">
+                            <h3>📍 GPS Tracking</h3>
+                            <span class="badge success">Real-time</span>
+                        </div>
+                        <p style="color: var(--color-text-secondary); margin-bottom: 12px;">Automatic transport mode detection with live GPS tracking</p>
+                        <button class="btn btn--primary btn--full-width">Start GPS Tracking</button>
+                    </div>
+                    
+                    <!-- Tracking Categories -->
+                    <div class="tracking-grid">
+                        <div class="tracking-card" onclick="app.showTrackingModal('mobility')">
+                            <div class="tracking-icon mobility">🚗</div>
+                            <h3>Manual Entry</h3>
+                            <p>Log trip manually</p>
+                        </div>
+                        <div class="tracking-card" onclick="app.showTrackingModal('food')">
+                            <div class="tracking-icon food">🍽️</div>
+                            <h3>Food</h3>
+                            <p>Scan receipts</p>
+                        </div>
+                        <div class="tracking-card" onclick="app.showTrackingModal('energy')">
+                            <div class="tracking-icon energy">⚡</div>
+                            <h3>Energy</h3>
+                            <p>Monitor usage</p>
+                        </div>
+                        <div class="tracking-card" onclick="app.showTrackingModal('shopping')">
+                            <div class="tracking-icon shopping">🛍️</div>
+                            <h3>Shopping</h3>
+                            <p>Log purchases</p>
+                        </div>
+                    </div>
+
+                    <!-- Auto-Tracked Today -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Auto-Tracked Today</h3>
+                            <span class="badge success">Live</span>
+                        </div>
+                        <div class="auto-tracked-list" id="auto-tracked-list"></div>
+                    </div>
+
+                    <!-- Weekly Summary Chart -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Weekly Emissions</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="weekly-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Screen -->
+        <div id="insights-view" class="view">
+            <div class="app-header">
+                <div class="header-content">
+                    <h2>AI Insights</h2>
+                </div>
+            </div>
+            
+            <div class="content-scroll">
+                <div class="content-padding">
+                    <!-- Carbon Hotspots -->
+                    <div class="card hotspot-card">
+                        <div class="card-header">
+                            <h3>🔥 Your Carbon Hotspots</h3>
+                        </div>
+                        <div class="hotspot-list" id="hotspot-list"></div>
+                    </div>
+
+                    <!-- Personalized Recommendations -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>💡 Recommendations for You</h3>
+                        </div>
+                        <div class="recommendations-list" id="recommendations-list"></div>
+                    </div>
+
+                    <!-- What-If Simulator -->
+                    <div class="card simulator-card">
+                        <div class="card-header">
+                            <h3>🔮 What-If Simulator</h3>
+                        </div>
+                        <p class="simulator-intro">See how lifestyle changes could impact your footprint</p>
+                        <div class="simulator-options">
+                            <button class="simulator-btn" onclick="app.runSimulation('ev')">
+                                <span class="sim-icon">🔌</span>
+                                <span>Switch to Electric Vehicle</span>
+                            </button>
+                            <button class="simulator-btn" onclick="app.runSimulation('solar')">
+                                <span class="sim-icon">☀️</span>
+                                <span>Install Solar Panels</span>
+                            </button>
+                            <button class="simulator-btn" onclick="app.runSimulation('vegan')">
+                                <span class="sim-icon">🌱</span>
+                                <span>Go Fully Plant-Based</span>
+                            </button>
+                            <button class="simulator-btn" onclick="app.runSimulation('public')">
+                                <span class="sim-icon">🚊</span>
+                                <span>Use Only Public Transport</span>
+                            </button>
+                        </div>
+                        <div id="simulation-result" class="simulation-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenges Screen -->
+        <div id="challenges-view" class="view">
+            <div class="app-header">
+                <div class="header-content">
+                    <h2>Challenges &amp; Achievements</h2>
+                </div>
+            </div>
+            
+            <div class="content-scroll">
+                <div class="content-padding">
+                    <!-- Current Streak -->
+                    <div class="card streak-card">
+                        <div class="streak-content">
+                            <div class="streak-icon">🔥</div>
+                            <div class="streak-info">
+                                <h3 id="streak-count">7</h3>
+                                <p>Day Streak</p>
+                            </div>
+                        </div>
+                        <p className="streak-message">Keep it up! You're on a roll!</p>
+                    </div>
+
+                    <!-- Weekly Challenges -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>This Week's Challenges</h3>
+                        </div>
+                        <div class="challenges-list" id="challenges-list"></div>
+                    </div>
+
+                    <!-- Achievements -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Your Achievements</h3>
+                        </div>
+                        <div class="achievements-grid" id="achievements-grid"></div>
+                    </div>
+
+                    <!-- Leaderboard -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🏆 Community Leaderboard</h3>
+                            <button class="btn btn--sm btn--secondary">Join</button>
+                        </div>
+                        <p class="leaderboard-info">Compare your reduction efforts with others in your city</p>
+                        <div class="leaderboard-list" id="leaderboard-list"></div>
+                    </div>
+
+                    <!-- Community Impact -->
+                    <div class="card community-card">
+                        <div class="card-header">
+                            <h3>🌍 Community Impact</h3>
+                        </div>
+                        <div class="impact-stats" id="impact-stats"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Automated Tracking Screen -->
+        <div id="automated-tracking-view" class="view">
+            <div class="app-header">
+                <div class="header-content">
+                    <button class="back-btn" onclick="app.backToDashboard()">← Back</button>
+                    <h2>GPS Tracking</h2>
+                    <div></div>
+                </div>
+            </div>
+            
+            <div class="content-scroll">
+                <div class="content-padding">
+                    <!-- GPS Location Tracking -->
+                    <div class="card tracking-module">
+                        <div class="card-header">
+                            <h3>🚗 Real-Time Mobility Tracking</h3>
+                        </div>
+                        
+                        <!-- Permission Request State -->
+                        <div id="permission-state" class="permission-request">
+                            <div class="permission-icon">📍</div>
+                            <h4>Enable Location Services</h4>
+                            <p>We need your location to detect transport mode and calculate carbon emissions automatically</p>
+                            <button class="btn btn--primary btn--full-width" onclick="app.requestLocationPermission()">Grant Permission</button>
+                        </div>
+                        
+                        <!-- Tracking Ready State -->
+                        <div id="tracking-ready" class="tracking-ready" style="display: none;">
+                            <div class="location-status success">
+                                <span class="status-icon">✅</span>
+                                <span>Location permission granted</span>
+                            </div>
+                            <div style="text-align: center; padding: 20px;">
+                                <p style="color: var(--color-text-secondary); margin-bottom: 20px;">Ready to track your trip. Click start to begin monitoring.</p>
+                                <button class="btn btn--primary btn--full-width" onclick="app.startTracking()">🚀 Start Tracking</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Active Tracking State -->
+                        <div id="tracking-active" class="tracking-active" style="display: none;">
+                            <div class="location-status active">
+                                <div class="status-indicator pulsing"></div>
+                                <span>Tracking active</span>
+                            </div>
+                            
+                            <!-- Current Coordinates -->
+                            <div class="coordinate-display">
+                                <div class="coordinate-item">
+                                    <div class="coordinate-label">Latitude</div>
+                                    <div class="coordinate-value" id="current-lat">--</div>
+                                </div>
+                                <div class="coordinate-item">
+                                    <div class="coordinate-label">Longitude</div>
+                                    <div class="coordinate-value" id="current-lng">--</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Detected Transport Mode -->
+                            <div class="current-mode">
+                                <div class="mode-icon" id="mode-icon">🚶</div>
+                                <div class="mode-name" id="mode-name">Detecting...</div>
+                                <div class="mode-emission" id="mode-emission">0 kg CO₂/km</div>
+                            </div>
+                            
+                            <!-- Live Trip Stats -->
+                            <div class="trip-stats">
+                                <div class="trip-stat">
+                                    <div class="trip-stat-label">Speed</div>
+                                    <div class="trip-stat-value" id="current-speed">0</div>
+                                    <div class="trip-stat-label">km/h</div>
+                                </div>
+                                <div class="trip-stat">
+                                    <div class="trip-stat-label">Distance</div>
+                                    <div class="trip-stat-value" id="trip-distance">0.0</div>
+                                    <div class="trip-stat-label">km</div>
+                                </div>
+                                <div class="trip-stat">
+                                    <div class="trip-stat-label">CO₂ Emitted</div>
+                                    <div class="trip-stat-value" id="trip-co2">0.0</div>
+                                    <div class="trip-stat-label">kg</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Daily Total -->
+                            <div class="cumulative-emissions">
+                                <div class="cumulative-title">Today's Total Mobility Carbon</div>
+                                <div class="emission-periods">
+                                    <div class="emission-period">
+                                        <div class="emission-period-label">All Trips Today</div>
+                                        <div class="emission-period-value" id="daily-co2">0.0 kg</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Stop Button -->
+                            <button class="btn btn--secondary btn--full-width" style="margin-top: 16px; background-color: var(--color-error);" onclick="app.stopTracking()">⏹️ Stop Tracking</button>
+                        </div>
+                        
+                        <!-- Permission Denied State -->
+                        <div id="permission-denied" class="permission-request" style="display: none;">
+                            <div class="permission-icon">❌</div>
+                            <h4>Location Permission Denied</h4>
+                            <p>Please enable location services in your browser settings to use GPS tracking.</p>
+                            <button class="btn btn--outline btn--full-width" onclick="app.requestLocationPermission()">Try Again</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Trip History -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📊 Trip History</h3>
+                        </div>
+                        <div id="trip-history" class="trip-history-list"></div>
+                    </div>
+
+                    <!-- Receipt Scanning Simulation -->
+                    <div class="card tracking-module">
+                        <div class="card-header">
+                            <h3>📸 Receipt Scanning</h3>
+                        </div>
+                        <div class="receipt-scan-area">
+                            <div class="scan-placeholder">
+                                <div class="scan-icon">📷</div>
+                                <p>Scan or upload a receipt to track consumption carbon footprint</p>
+                                <button class="btn btn--primary" onclick="app.simulateReceiptScan()">Upload Receipt</button>
+                            </div>
+                        </div>
+                        <div id="receipt-results" class="receipt-results" style="display: none;"></div>
+                    </div>
+
+                    <!-- Energy Usage Monitoring -->
+                    <div class="card tracking-module">
+                        <div class="card-header">
+                            <h3>⚡ Energy Usage Monitoring</h3>
+                        </div>
+                        <div class="energy-toggle">
+                            <button class="toggle-option active" data-mode="smart" onclick="app.switchEnergyMode('smart')">Smart Home</button>
+                            <button class="toggle-option" data-mode="manual" onclick="app.switchEnergyMode('manual')">Manual Input</button>
+                        </div>
+                        <div id="energy-smart" class="energy-mode-content">
+                            <div class="smart-home-simulation">
+                                <p class="mode-description">Simulating smart home API connection...</p>
+                                <button class="btn btn--secondary btn--full-width" onclick="app.simulateSmartHome()">Pull Smart Home Data</button>
+                                <div id="smart-home-data" style="display: none;"></div>
+                            </div>
+                        </div>
+                        <div id="energy-manual" class="energy-mode-content" style="display: none;">
+                            <div class="manual-input-form">
+                                <div class="form-group">
+                                    <label class="form-label">Household Size</label>
+                                    <select class="form-control" id="household-size">
+                                        <option value="1">1 person</option>
+                                        <option value="2" selected>2 people</option>
+                                        <option value="3">3 people</option>
+                                        <option value="4">4 people</option>
+                                        <option value="5">5+ people</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="location" placeholder="Enter city" value="New York">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Monthly Bill Photo (Simulated)</label>
+                                    <button class="btn btn--outline btn--full-width" onclick="app.simulateBillUpload()">Upload Bill Photo</button>
+                                </div>
+                                <button class="btn btn--primary btn--full-width" onclick="app.calculateManualEnergy()">Calculate Carbon</button>
+                                <div id="manual-energy-results" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Transaction Categorization -->
+                    <div class="card tracking-module">
+                        <div class="card-header">
+                            <h3>💳 Financial Transactions</h3>
+                        </div>
+                        <div class="financial-import">
+                            <p class="mode-description">Import bank transactions to analyze carbon-intensive spending</p>
+                            <button class="btn btn--primary btn--full-width" onclick="app.simulateBankImport()">Import Transactions</button>
+                            <div id="financial-results" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Screen -->
+        <div id="profile-view" class="view">
+            <div class="app-header">
+                <div class="header-content">
+                    <h2>Profile</h2>
+                </div>
+            </div>
+            
+            <div class="content-scroll">
+                <div class="content-padding">
+                    <!-- User Profile Card -->
+                    <div class="card profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">👤</div>
+                            <div class="profile-info">
+                                <h3 id="profile-username">User</h3>
+                                <p id="profile-email">user@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-value" id="profile-footprint">15.2</span>
+                                <span class="stat-label">kg CO₂/month</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="profile-reduction">12%</span>
+                                <span class="stat-label">Reduction</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="profile-badges">5</span>
+                                <span class="stat-label">Badges</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Settings</h3>
+                        </div>
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <span>🔔 Notifications</span>
+                                <label class="toggle">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <span>📍 Location Tracking</span>
+                                <label class="toggle">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <span>🏠 Smart Home Integration</span>
+                                <label class="toggle">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <span>🏆 Show on Leaderboard</span>
+                                <label class="toggle">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- About -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>About CarbonWise</h3>
+                        </div>
+                        <p class="about-text">Version 1.0.0</p>
+                        <p class="about-text">Track, reduce, and thrive with CarbonWise - your personal carbon footprint companion.</p>
+                        <button class="btn btn--outline btn--full-width" style="margin-top: 16px;">Help &amp; Support</button>
+                    </div>
+
+                    <!-- Logout -->
+                    <button id="logout-btn" class="btn btn--outline btn--full-width" style="margin-top: 16px; margin-bottom: 100px;">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-view="dashboard">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Dashboard</span>
+            </button>
+            <button class="nav-item" data-view="track">
+                <span class="nav-icon">📍</span>
+                <span class="nav-label">Track</span>
+            </button>
+            <button class="nav-item" data-view="insights">
+                <span class="nav-icon">💡</span>
+                <span class="nav-label">Insights</span>
+            </button>
+            <button class="nav-item" data-view="challenges">
+                <span class="nav-icon">🏆</span>
+                <span class="nav-label">Challenges</span>
+            </button>
+            <button class="nav-item" data-view="profile">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Tracking Modal -->
+    <div id="tracking-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Log Activity</h3>
+                <button class="modal-close" onclick="app.closeModal()">&times;</button>
+            </div>
+            <div id="modal-body" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
